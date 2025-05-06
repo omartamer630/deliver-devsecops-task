@@ -1,0 +1,41 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    
+    on-failuer: ABORT
+    commands: |
+      echo "Installing terraform"
+      yum install -y wget unzip
+      yum clean all
+      tf_version=$TERRAFORM_VERSION
+      wget https://releases.hashicorp.com/terraform/"$TERRAFORM_VERSION"/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
+      unzip terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
+      chmod 775 terraform
+      mv terraform /usr/local/bin/
+      terraform --version
+      rm terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
+      ls -al /usr/local/bin/terraform
+      echo "Installing Checkov components"
+      yum install python -y
+      pip install --no-input checkov
+      pip install --upgrade --no-input urllib3
+      yum install jq -y
+
+  pre_build:
+    on-failure: ABORT
+    commands: |
+      if [ "$STAGE_TYPE" = "plan" ]; then
+
+
+      if [ "$STAGE_TYPE" = "scan" ]; then
+
+  build:
+    on-failure: ABORT
+    commands: |
+      if [ "$STAGE_TYPE" = "apply" ]; then
+
+  post_build:
+    on-failure: CONTINUE
+    commands: |
