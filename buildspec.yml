@@ -84,6 +84,3 @@ phases:
         echo "print out lock file configuration"
          jq '.configuration.lock_version' tfplan.json
       fi
-artifacts:
-  files:
-    - output/**/*
