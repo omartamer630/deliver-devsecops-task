@@ -2,6 +2,8 @@ version: 0.2
 env:
   variables: 
     TERRAFORM_VERSION: "1.5.6"
+    PIP_CACHE_DIR: "/tmp/pip-cache"
+
 phases:
   install:
     runtime-versions:
@@ -107,14 +109,13 @@ phases:
 artifacts:
   files:
     - '**/*'
-    - 'tfplan.json'            # Terraform plan JSON output for review
-
+    - 'tfplan.json'       
   base-directory: '.'
 
 cache:
   paths:
-    - '.terraform/providers/**/*'
-    - '/var/cache/apt/archives/**/*'           # APT package archives
-    - '/root/.cache/pip/**/*'                  # Pip packages
-    - '/usr/local/lib/python3.12/site-packages/**/*'   # Python installed packages
-    - '/tmp/terraform_binaries/'               # Create this directory to store the terraform binary
+    - '.terraform/**/*'
+    - '/var/cache/apt/archives/**/*'     
+    - '/root/.cache/pip/**/*'                  
+    - '/tmp/terraform_binaries/'               
+    - '/tmp/pip-cache/**/*'
