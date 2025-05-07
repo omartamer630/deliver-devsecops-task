@@ -9,14 +9,13 @@ resource "aws_codestarconnections_connection" "github_connections_with_pipeline"
 }
 
 resource "aws_codepipeline" "codepipeline" {
-  name     = "deliver-devsecops-pipeline"
+  name     = "devsecopspipeline"
   role_arn = aws_iam_role.codepipeline-role.arn
 
   artifact_store {
     location = aws_s3_bucket.codepipeline_artifact_store.bucket
     type     = "S3"
   }
-  execution_mode = "PARALLEL"
   stage {
     name = "Source"
 
@@ -88,10 +87,10 @@ resource "aws_codepipeline" "codepipeline" {
     }
   }
   stage {
-    name = "Manual Approval"
+    name = "Manual_Approval"
 
     action {
-      name     = "manula_approval"
+      name     = "manual_approval"
       category = "Approval"
       owner    = "AWS"
       provider = "Manual"
@@ -99,10 +98,10 @@ resource "aws_codepipeline" "codepipeline" {
     }
   }
   stage {
-    name = "Scan"
+    name = "Apply"
 
     action {
-      name             = "scan"
+      name             = "apply"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"

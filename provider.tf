@@ -11,10 +11,9 @@ terraform {
     key          = "terraform.tfstate"
     region       = "us-east-1"
     encrypt      = true
-    use_lockfile = true
   }
 }
 
 provider "aws" {
-  region = var.AWS_DEFAULT_REGION
+  region = "us-east-1"
 }
