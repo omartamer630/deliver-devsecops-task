@@ -29,10 +29,6 @@ phases:
   pre_build:
     on-failure: ABORT
     commands: |
-      echo "Pre-build stage"
-  build:
-    on-failure: ABORT
-    commands: |
       if [ "$STAGE_TYPE" = "plan" ]; then
         echo "Plan Stage"
         ls -lathr;
@@ -50,8 +46,8 @@ phases:
       else
         echo "No Plan, or Scan Stages"
       fi
-  post_build:
-    on-failure: CONTINUE
+  build:
+    on-failure: ABORT
     commands: |
       if [ "$STAGE_TYPE" = "apply" ]; then
         echo  "Apply stage";
@@ -59,9 +55,14 @@ phases:
         terraform apply tfplan;
       else
         echo "No Apply stage";
+      fi
+  post_build:
+    on-failure: CONTINUE
+    commands: |
+      if [ "$STAGE_TYPE" = "apply" ]; then
         echo "Fetching provisioning details"
-        terraform show -json tfplan > tfplan.json
-        apt-get install -y jq
+       terraform show -json tfplan > tfplan.json
+       apt-get install -y jq
         echo "print out terrafrom version and json format version"
         jq '.terraform_version, .format_version' tfplan.json
         echo ""
@@ -72,16 +73,16 @@ phases:
         jq '.configuration.root_module.resources' tfplan.json
         echo ""
         echo "print out outputs"
-        jq '.outputs' tfplan.json
-        echo ""
-        echo "print out resource changes"
-        jq '.resource_changes' tfplan.json
-        echo ""
-        echo "print out resource config"
+       jq '.outputs' tfplan.json
+       echo ""
+       echo "print out resource changes"
+       jq '.resource_changes' tfplan.json
+       echo ""
+       echo "print out resource config"
         jq '.configuration.root_module.resources' tfplan.json
         echo ""
         echo "print out lock file configuration"
-        jq '.configuration.lock_version' tfplan.json
+         jq '.configuration.lock_version' tfplan.json
       fi
 artifacts:
   files:
