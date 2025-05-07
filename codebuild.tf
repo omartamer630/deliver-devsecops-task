@@ -1,5 +1,5 @@
-resource "aws_codebuild_project" "code_prepartion" {
-  name         = "my-codebuild-code_prepartion"
+resource "aws_codebuild_project" "code_preparation" {
+  name         = "my-codebuild-code-preparation"
   service_role = aws_iam_role.codebuild-role.arn
   artifacts {
     type = "CODEPIPELINE"
@@ -26,7 +26,7 @@ resource "aws_codebuild_project" "code_prepartion" {
   }
 }
 resource "aws_codebuild_project" "code_plan" {
-  name         = "my-codebuild-code_plan"
+  name         = "my-codebuild-code-plan"
   service_role = aws_iam_role.codebuild-role.arn
   artifacts {
     type = "CODEPIPELINE"
@@ -52,7 +52,7 @@ resource "aws_codebuild_project" "code_plan" {
   }
 }
 resource "aws_codebuild_project" "code_scan" {
-  name         = "my-codebuild-code_scan"
+  name         = "my-codebuild-code-scan"
   service_role = aws_iam_role.codebuild-role.arn
   artifacts {
     type = "CODEPIPELINE"
@@ -78,7 +78,7 @@ resource "aws_codebuild_project" "code_scan" {
   }
 }
 resource "aws_codebuild_project" "code_apply" {
-  name         = "my-codebuild-code_apply"
+  name         = "my-codebuild-code-apply"
   service_role = aws_iam_role.codebuild-role.arn
   artifacts {
     type = "CODEPIPELINE"

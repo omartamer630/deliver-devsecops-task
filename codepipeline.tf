@@ -36,19 +36,19 @@ resource "aws_codepipeline" "codepipeline" {
   }
 
   stage {
-    name = "Prepartion"
+    name = "preparation"
 
     action {
-      name             = "prepartion"
+      name             = "preparation"
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
       input_artifacts  = ["source_output"]
-      output_artifacts = ["prepartion_output"]
+      output_artifacts = ["preparation_output"]
       version          = "1"
 
       configuration = {
-        ProjectName = aws_codebuild_project.code_prepartion.name
+        ProjectName = aws_codebuild_project.code_preparation.name
       }
     }
   }
@@ -60,7 +60,7 @@ resource "aws_codepipeline" "codepipeline" {
       category         = "Build"
       owner            = "AWS"
       provider         = "CodeBuild"
-      input_artifacts  = ["prepartion_output"]
+      input_artifacts  = ["preparation_output"]
       output_artifacts = ["plan_output"]
       version          = "1"
 
