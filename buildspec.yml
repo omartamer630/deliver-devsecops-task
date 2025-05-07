@@ -9,23 +9,52 @@ phases:
     
     on-failure: ABORT
     commands: |
+install:
+  runtime-versions:
+    python: 3.12
+  
+  on-failure: ABORT
+  commands: |
+    # Create cache directory if it doesn't exist
+    mkdir -p /tmp/terraform_binaries/
+    
+    # Check if terraform binary already exists in cache
+    if [ -f "/tmp/terraform_binaries/terraform_$TERRAFORM_VERSION" ]; then
+      echo "Using cached Terraform binary"
+      cp /tmp/terraform_binaries/terraform_$TERRAFORM_VERSION /usr/local/bin/terraform
+      chmod 775 /usr/local/bin/terraform
+    else
       echo "Installing terraform"
+      apt-get update
       apt-get install -y wget unzip 
       apt-get clean all
       tf_version=$TERRAFORM_VERSION
       wget https://releases.hashicorp.com/terraform/"$TERRAFORM_VERSION"/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
       unzip terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
       chmod 775 terraform
+      # Cache the terraform binary
+      cp terraform /tmp/terraform_binaries/terraform_$TERRAFORM_VERSION
       mv terraform /usr/local/bin/
-      terraform --version
       rm terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
-      ls -al /usr/local/bin/terraform
+    fi
+    
+    terraform --version
+    ls -al /usr/local/bin/terraform
+    
+    # Check if Checkov is already installed (won't be perfect but helps)
+    if ! command -v checkov &> /dev/null; then
       echo "Installing Checkov components"
       apt-get install python -y
       pip install --no-input checkov
       pip install --upgrade --no-input urllib3
+    else
+      echo "Checkov already installed"
+    fi
+    
+    # Install jq if not already installed
+    if ! command -v jq &> /dev/null; then
       apt-get install jq -y
-
+    fi
   pre_build:
     on-failure: ABORT
     commands: |
@@ -84,3 +113,16 @@ phases:
         echo "print out lock file configuration"
          jq '.configuration.lock_version' tfplan.json
       fi
+artifacts:
+  files:
+    - '**/*'
+  base-directory: '.'
+
+cache:
+  paths:
+    - '.terraform/modules/**/*'
+    - '.terraform/providers/**/*'
+    - '/var/cache/apt/archives/**/*'           # APT package archives
+    - '/root/.cache/pip/**/*'                  # Pip packages
+    - '/usr/local/lib/python3.12/site-packages/**/*'   # Python installed packages
+    - '/tmp/terraform_binaries/'               # Create this directory to store the terraform binary

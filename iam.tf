@@ -114,6 +114,17 @@ resource "aws_iam_role_policy" "codebuild_policy" {
           "codebuild:StartBuild"
         ]
         Resource = "*"
+        }, {
+        Effect = "Allow",
+        Action = [
+          "iam:PassRole",
+          "iam:GetRole",
+          "iam:CreateRole",
+          "iam:DeleteRole",
+          "iam:PutRolePolicy",
+          "iam:DeleteRolePolicy"
+        ],
+        Resource = "*"
       }
     ]
   })
