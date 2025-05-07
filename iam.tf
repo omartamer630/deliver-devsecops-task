@@ -122,10 +122,19 @@ resource "aws_iam_role_policy" "codebuild_policy" {
           "iam:CreateRole",
           "iam:DeleteRole",
           "iam:PutRolePolicy",
-          "iam:DeleteRolePolicy"
+          "iam:DeleteRolePolicy",
+          "iam:ListRolePolicies",
+          "iam:GetRolePolicy"
         ],
         Resource = "*"
-      }
+      },
+      {
+      "Effect": "Allow",
+      "Action": [
+        "codeconnections:GetConnection"
+      ],
+      "Resource": "arn:aws:codestar-connections:us-east-1:022499038054:connection/a9d2b322-8c1a-4094-8a71-a75ddbaca357"
+    }
     ]
   })
 }
