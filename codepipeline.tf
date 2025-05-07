@@ -25,7 +25,7 @@ resource "aws_codepipeline" "codepipeline" {
       owner            = "AWS"
       provider         = "CodeStarSourceConnection"
       version          = "1"
-      output_artifacts = ["source_output"] # Storing Output of this Stage
+      output_artifacts = ["source_output"]
 
       configuration = {
         ConnectionArn    = aws_codestarconnections_connection.github_connections_with_pipeline.arn
@@ -90,12 +90,18 @@ resource "aws_codepipeline" "codepipeline" {
     name = "Manual_Approval"
 
     action {
-      name     = "manual_approval"
-      category = "Approval"
-      owner    = "AWS"
-      provider = "Manual"
-      version  = "1"
+      name             = "manual_approval"
+      category         = "Approval"
+      owner            = "AWS"
+      provider         = "Manual"
+      input_artifacts  = []
+      output_artifacts = []
+      version          = "1"
+      configuration = {
+        CustomData = "Please verify the terraform plan output on the Plan stage and only approve this step if you see expected changes!"
+      }
     }
+
   }
   stage {
     name = "Apply"

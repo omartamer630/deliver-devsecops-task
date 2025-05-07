@@ -23,11 +23,7 @@ data "aws_iam_policy_document" "codepipeline-policy" {
   statement {
     effect = "Allow"
     actions = [
-      "s3:GetObject",
-      "s3:GetObjectVersion",
-      "s3:GetBucketVersioning",
-      "s3:PutObjectAcl",
-      "s3:PutObject"
+      "s3:*"
     ]
     resources = [
       aws_s3_bucket.codepipeline_artifact_store.arn,
@@ -97,27 +93,20 @@ resource "aws_iam_role_policy" "codebuild_policy" {
         }, {
         Effect = "Allow"
         Action = [
-          "s3:GetObject",
-          "s3:GetObjectVersion",
-          "s3:GetBucketVersioning",
-          "s3:PutObject",
-          "s3:PutObjectAcl",
-          "s3:GetBucketLocation",
-          "s3:ListBucket",
-          "s3:ListBucketVersions"
+          "s3:*"
         ],
         Resource = "*"
       },
       {
-  "Effect": "Allow",
-  "Action": [
-    "codepipeline:PutJobSuccessResult",
-    "codepipeline:PutJobFailureResult",
-    "codepipeline:GetJobDetails",
-    "codepipeline:AcknowledgeJob"
-  ],
-  "Resource": "*"
-},
+        "Effect" : "Allow",
+        "Action" : [
+          "codepipeline:PutJobSuccessResult",
+          "codepipeline:PutJobFailureResult",
+          "codepipeline:GetJobDetails",
+          "codepipeline:AcknowledgeJob"
+        ],
+        "Resource" : "*"
+      },
       {
         Effect = "Allow"
         Action = [
