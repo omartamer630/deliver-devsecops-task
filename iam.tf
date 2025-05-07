@@ -96,12 +96,24 @@ resource "aws_iam_role_policy" "codebuild_policy" {
         Resource = "*"
         }, {
         Effect = "Allow"
-        Action = [
+        "Action": [
           "s3:GetObject",
-          "s3:PutObject"
-        ]
+          "s3:GetObjectVersion",
+          "s3:GetBucketLocation",
+          "s3:ListBucket"
+        ],
         Resource = "*"
       },
+      {
+  "Effect": "Allow",
+  "Action": [
+    "codepipeline:PutJobSuccessResult",
+    "codepipeline:PutJobFailureResult",
+    "codepipeline:GetJobDetails",
+    "codepipeline:AcknowledgeJob"
+  ],
+  "Resource": "*"
+},
       {
         Effect = "Allow"
         Action = [
